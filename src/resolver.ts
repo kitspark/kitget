@@ -11,12 +11,12 @@ export async function resolveSource(
   const forceRemote = opts?.forceRemote ?? false;
 
   // Local mode
-  if (!forceRemote && source.type === "local" && source.path) {
+  if (!forceRemote && source.path) {
     return path.resolve(source.path);
   }
 
   // Remote mode
-  if (source.type === "github") {
+  if (source.type === "github" && forceRemote) {
     if (!source.repo || !source.ref) {
       throw new Error("GitHub source requires repo and ref");
     }
