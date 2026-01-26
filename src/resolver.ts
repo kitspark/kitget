@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
-import { Manifest } from "./manifest";
 import { cloneRepo } from "./clone";
+import { Manifest } from "./manifest";
 
 export async function resolveSource(
   manifest: Manifest,
@@ -10,10 +10,12 @@ export async function resolveSource(
   const { source, version } = manifest.kit;
   const forceRemote = opts?.forceRemote ?? false;
 
-  if (source.type === "local" && source.path && !forceRemote) {
+  // Local mode
+  if (!forceRemote && source.type === "local" && source.path) {
     return path.resolve(source.path);
   }
 
+  // Remote mode
   if (source.type === "github") {
     if (!source.repo || !source.ref) {
       throw new Error("GitHub source requires repo and ref");
@@ -25,5 +27,9 @@ export async function resolveSource(
     return tmp;
   }
 
-  throw new Error("Invalid kit.source configuration");
+  throw new Error(
+    forceRemote
+      ? "forceRemote is set but no GitHub source is configured"
+      : "Invalid kit.source configuration"
+  );
 }

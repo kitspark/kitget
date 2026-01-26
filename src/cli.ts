@@ -7,13 +7,16 @@ import { log } from "./logger";
 import path from "path";
 
 async function main() {
+  const forceRemote = process.argv.includes("--remote");
   const manifestPath = path.resolve(
     process.cwd(),
     "kit.manifest.json"
   );
 
   const manifest = await readManifest(manifestPath);
-  const source = await resolveSource(manifest);
+  const source = await resolveSource(manifest, {
+    forceRemote
+  });
   
   await slice(manifest, source);
   log.info("Kit sync complete");
