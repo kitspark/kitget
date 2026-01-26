@@ -1,6 +1,6 @@
 {
   "name": "@kitspark/kitget",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "private": false,
   "bin": {
     "kitget": "dist/cli.js"
