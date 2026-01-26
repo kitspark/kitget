@@ -21,7 +21,7 @@ export async function resolveSource(
 
     const tmp = path.join(".tmp-kit", "core");
     await fs.rm(tmp, { recursive: true, force: true });
-    await cloneRepo(source.repo, source.ref, tmp);
+    cloneRepo(source.repo, source.ref, tmp);
     return tmp;
   }
 
