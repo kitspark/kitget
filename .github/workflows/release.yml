@@ -46,8 +46,8 @@ jobs:
         run: |
           set -euo pipefail
           PKG_NAME="$(node -p "require('./package.json').name")"
-          if [ "$PKG_NAME" != "@kitspark/fullmodalfx" ]; then
-            echo "package.json name must be @kitspark/fullmodalfx (got: $PKG_NAME)"
+          if [ "$PKG_NAME" != "@kitspark/kitget" ]; then
+            echo "package.json name must be @kitspark/kitget (got: $PKG_NAME)"
             exit 1
           fi
           PKG_ACCESS="$(node -p "require('./package.json').publishConfig?.access || ''")"
