@@ -1,5 +1,22 @@
 {
   "name": "@kitspark/kitget",
+  "description": "kitget is a one-shot source slicer for the Kitspark ecosystem.",
+  "license": "MIT",
+  "author": "Kitspark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kitspark/kitget"
+  },
+  "homepage": "https://github.com/kitspark/kitget#readme",
+  "bugs": {
+    "url": "https://github.com/kitspark/kitget/issues"
+  },
+  "keywords": [
+    "cli",
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.3.1",
   "private": false,
   "bin": {

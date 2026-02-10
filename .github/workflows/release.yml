@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: "Version bump type"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Validate package
+        run: |
+          set -euo pipefail
+          PKG_NAME="$(node -p "require('./package.json').name")"
+          if [ "$PKG_NAME" != "@kitspark/fullmodalfx" ]; then
+            echo "package.json name must be @kitspark/fullmodalfx (got: $PKG_NAME)"
+            exit 1
+          fi
+          PKG_ACCESS="$(node -p "require('./package.json').publishConfig?.access || ''")"
+          if [ "$PKG_ACCESS" != "public" ]; then
+            echo "publishConfig.access must be public (got: $PKG_ACCESS)"
+            exit 1
+          fi
+
+      - name: Bump version and tag
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          npm version "${{ inputs.release_type }}" -m "chore(release): v%s"
+
+      - name: Set release tag
+        run: |
+          set -euo pipefail
+          echo "RELEASE_TAG=v$(node -p "require('./package.json').version")" >> "$GITHUB_ENV"
+
+      - name: Push commit and tag
+        run: |
+          git push origin HEAD
+          git push origin --tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          generate_release_notes: true
+
+      - name: Publish to npm
+        run: npm publish --access public --provenance
