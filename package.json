@@ -12,7 +12,7 @@
     "url": "https://github.com/kitspark/kitget/issues"
   },
   "keywords": [
-    "cli",
+    "cli"
   ],
   "publishConfig": {
     "access": "public"
