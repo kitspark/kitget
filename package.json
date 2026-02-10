@@ -17,7 +17,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "bin": {
     "kitget": "dist/cli.js"
